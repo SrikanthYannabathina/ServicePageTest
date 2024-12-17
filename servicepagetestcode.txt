@@ -1,0 +1,65 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.util.List;
+
+public class servicepagetest {
+    public static void main(String[] args) {
+        // Step 1: Set up WebDriver
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\Srisr\\Downloads\\chromedriver-win32\\chromedriver-win32\\chromedriver.exe"); // Update with your ChromeDriver path
+        WebDriver driver = new ChromeDriver();
+
+        try {
+            // Step 2: Open the website
+            driver.get("https://qaservicesect.ccbp.tech/");
+
+            // Step 3: Find the <h1> element
+            WebElement currentNode = driver.findElement(By.xpath("//h1[text()='Online Support 24/7']"));
+
+            // Step 4: Verify titles
+            List<WebElement> titles = currentNode.findElements(By.xpath("ancestor::*[2]/preceding::section//h3"));
+            String[] actualTitles = titles.stream().map(WebElement::getText).toArray(String[]::new);
+            String[] expectedTitles = {"Fast and Free Delivery", "100% Money back guarantee"};
+
+            if (java.util.Arrays.equals(actualTitles, expectedTitles)) {
+                System.out.println("Titles Checked");
+            } else {
+                System.out.println("Mismatch Found in Titles");
+            }
+
+            // Step 5: Verify descriptions
+            List<WebElement> descriptions = currentNode.findElements(By.xpath("ancestor::*[2]/preceding::section//p"));
+            String[] actualDescriptions = descriptions.stream().map(WebElement::getText).toArray(String[]::new);
+            String[] expectedDescriptions = {
+                    "Fast, free, and convenient delivery choices on millions of items.",
+                    "This is probably the most popular guarantee in the world."
+            };
+
+            if (java.util.Arrays.equals(actualDescriptions, expectedDescriptions)) {
+                System.out.println("Descriptions Checked");
+            } else {
+                System.out.println("Mismatch Found in Descriptions");
+            }
+
+            // Step 6: Verify section heading and description
+            String heading = currentNode.findElement(By.xpath("ancestor::*[2]/preceding::*[5]/child::h2")).getText();
+            String sectionDescription = currentNode.findElement(By.xpath("ancestor::*[2]/preceding::*[5]/child::p")).getText();
+
+            String expectedHeading = "Our Services";
+            String expectedSectionDescription = "Most online stores offer lower prices. Online shopping makes price comparison simpler and quicker. "
+                    + "It is very convenient to shop from where you are located. It saves you the cost of driving to stores, "
+                    + "as well as parking fees.";
+
+            if (heading.equals(expectedHeading) && sectionDescription.equals(expectedSectionDescription)) {
+                System.out.println("Section Header Checked");
+            } else {
+                System.out.println("Mismatch Found in Section Header");
+            }
+        } finally {
+            // Step 7: Close the browser
+            driver.quit();
+        }
+    }
+}
